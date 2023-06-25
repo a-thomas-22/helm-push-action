@@ -22,6 +22,9 @@ fi
 # Store the original working directory
 orig_dir=$(pwd)
 
+#create certificates directory
+mkdir -p /usr/local/share/certificates
+
 # save ca.crt, cert.key, and cert.cert to /usr/local/share/certificates
 if [[ $CHARTMUSEUM_CA_CRT ]]; then
   echo $CHARTMUSEUM_CA_CRT | base64 -d > /usr/local/share/certificates/ca.crt
