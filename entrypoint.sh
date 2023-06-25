@@ -27,14 +27,17 @@ mkdir -p /usr/local/share/certificates
 
 # save ca.crt, cert.key, and cert.cert to /usr/local/share/certificates
 if [[ $CHARTMUSEUM_CA_CRT ]]; then
+  echo "CA_CRT is set. Saving to /usr/local/share/certificates/ca.crt"
   echo $CHARTMUSEUM_CA_CRT | base64 -d > /usr/local/share/certificates/ca.crt
 fi
 
 if [[ $CHARTMUSEUM_KEY ]]; then
+  echo "KEY is set. Saving to /usr/local/share/certificates/cert.key"
   echo $CHARTMUSEUM_KEY | base64 -d > /usr/local/share/certificates/cert.key
 fi
 
 if [[ $CHARTMUSEUM_CERT ]]; then
+  echo "CERT is set. Saving to /usr/local/share/certificates/cert.cert"
   echo $CHARTMUSEUM_CERT | base64 -d > /usr/local/share/certificates/cert.cert
 fi
 
@@ -46,7 +49,7 @@ for CHART_PATH in $PATHS; do
   helm inspect chart .
 
   if [[ $CHARTMUSEUM_REPO_NAME ]]; then
-    helm repo add ${CHARTMUSEUM_REPO_NAME} ${CHARTMUSEUM_URL} --ca-file /usr/local/share/ca-certificates/ca.crt --cert-file /usr/local/share/certificates/cert.crt --key-file /usr/local/share/certificates/cert.key
+    helm repo add ${CHARTMUSEUM_REPO_NAME} ${CHARTMUSEUM_URL} --ca-file /usr/local/share/certificates/ca.crt --cert-file /usr/local/share/certificates/cert.crt --key-file /usr/local/share/certificates/cert.key
   fi
 
   helm dependency update .
@@ -57,7 +60,7 @@ for CHART_PATH in $PATHS; do
 
   export HELM_REPO_ACCESS_TOKEN="${CHARTMUSEUM_JWT}"
   
-  helm cm-push ${CHART_FOLDER}-* ${CHARTMUSEUM_URL} ${FORCE} --ca-file /usr/local/share/ca-certificates/ca.crt --cert-file /usr/local/share/certificates/cert.crt --key-file /usr/local/share/certificates/cert.key
+  helm cm-push ${CHART_FOLDER}-* ${CHARTMUSEUM_URL} ${FORCE} --ca-file /usr/local/share/certificates/ca.crt --cert-file /usr/local/share/certificates/cert.crt --key-file /usr/local/share/certificates/cert.key
 
   # Return to the original working directory at the end of each loop iteration
   cd $orig_dir
