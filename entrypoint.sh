@@ -25,12 +25,10 @@ orig_dir=$(pwd)
 #create certificates directory
 mkdir -p $GITHUB_WORKSPACE
 
-# save ca.crt, cert.key, and cert.cert to $GITHUB_WORKSPACE
+# save ca.crt, cert.key, and cert.crt to $GITHUB_WORKSPACE
 if [[ $CHARTMUSEUM_CA_CRT ]]; then
   echo "CA_CRT is set. Saving to $GITHUB_WORKSPACE/ca.crt"
   echo $CHARTMUSEUM_CA_CRT | base64 -d > $GITHUB_WORKSPACE/ca.crt
-  echo "File contents:"
-  cat $GITHUB_WORKSPACE/ca.crt
 fi
 
 if [[ $CHARTMUSEUM_KEY ]]; then
@@ -39,10 +37,8 @@ if [[ $CHARTMUSEUM_KEY ]]; then
 fi
 
 if [[ $CHARTMUSEUM_CERT ]]; then
-  echo "CERT is set. Saving to $GITHUB_WORKSPACE/cert.cert"
-  echo $CHARTMUSEUM_CERT | base64 -d > $GITHUB_WORKSPACE/cert.cert
-  echo "File contents:"
-  cat $GITHUB_WORKSPACE/cert.cert
+  echo "CERT is set. Saving to $GITHUB_WORKSPACE/cert.crt"
+  echo $CHARTMUSEUM_CERT | base64 -d > $GITHUB_WORKSPACE/cert.crt
 fi
 
 for CHART_PATH in $PATHS; do
