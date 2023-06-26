@@ -52,7 +52,7 @@ for CHART_PATH in $PATHS; do
   helm inspect chart .
 
   if [[ $CHARTMUSEUM_REPO_NAME ]]; then
-    helm repo add ${CHARTMUSEUM_REPO_NAME} ${CHARTMUSEUM_ALIAS} --ca-file $GITHUB_WORKSPACE/ca.crt --cert-file $GITHUB_WORKSPACE/cert.crt --key-file $GITHUB_WORKSPACE/cert.key
+    helm repo add ${CHARTMUSEUM_REPO_NAME} https://${CHARTMUSEUM_ALIAS} --ca-file $GITHUB_WORKSPACE/ca.crt --cert-file $GITHUB_WORKSPACE/cert.crt --key-file $GITHUB_WORKSPACE/cert.key
   fi
 
   helm dependency update .
@@ -61,7 +61,7 @@ for CHART_PATH in $PATHS; do
 
   CHART_FOLDER=$(basename "$CHART_PATH")
 
-  helm cm-push ${CHART_FOLDER}-* ${CHARTMUSEUM_ALIAS} ${FORCE} --ca-file $GITHUB_WORKSPACE/ca.crt --cert-file $GITHUB_WORKSPACE/cert.crt --key-file $GITHUB_WORKSPACE/cert.key
+  helm cm-push ${CHART_FOLDER}-* https://${CHARTMUSEUM_ALIAS} ${FORCE} --ca-file $GITHUB_WORKSPACE/ca.crt --cert-file $GITHUB_WORKSPACE/cert.crt --key-file $GITHUB_WORKSPACE/cert.key
 
   # Return to the original working directory at the end of each loop iteration
   cd $orig_dir
