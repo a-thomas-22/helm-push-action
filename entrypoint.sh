@@ -22,8 +22,8 @@ fi
 # Add CNAME to dnsmasq configuration
 echo "address=/${CHARTMUSEUM_ALIAS}/${CHARTMUSEUM_URL}" > /etc/dnsmasq.d/0hosts
 
-# Restart dnsmasq service to apply the change
-service dnsmasq restart
+# Start dnsmasq in background
+dnsmasq -d -q -k &
 
 # Store the original working directory
 orig_dir=$(pwd)

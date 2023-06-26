@@ -23,5 +23,8 @@ RUN apk add --virtual .helm-build-deps git make \
     && rm -rf /opt/helm/plugins/https-github.com-chartmuseum-helm-push.git \
     && apk del --purge .helm-build-deps
 
+# Create directory for dnsmasq configuration
+RUN mkdir -p /etc/dnsmasq.d/
+
 COPY entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
