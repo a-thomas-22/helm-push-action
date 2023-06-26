@@ -12,7 +12,7 @@ ENV XDG_CONFIG_DIR=/opt
 ENV XDG_DATA_HOME=/opt
 ENV XDG_CACHE_HOME=/opt
 
-RUN apk add curl tar bash dnsmasq --no-cache
+RUN apk add curl tar bash bind-tools--no-cache
 RUN set -ex \
     && curl -sSL https://get.helm.sh/helm-${HELM_VERSION}-linux-amd64.tar.gz | tar xz \
     && mv linux-amd64/helm /usr/local/bin/helm \
@@ -22,9 +22,6 @@ RUN apk add --virtual .helm-build-deps git make \
     && helm plugin install https://github.com/chartmuseum/helm-push.git --version ${HELM_PLUGIN_PUSH_VERSION} \
     && rm -rf /opt/helm/plugins/https-github.com-chartmuseum-helm-push.git \
     && apk del --purge .helm-build-deps
-
-# Create directory for dnsmasq configuration
-RUN mkdir -p /etc/dnsmasq.d/
 
 COPY entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]

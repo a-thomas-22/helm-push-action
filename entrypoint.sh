@@ -19,11 +19,6 @@ elif [ "$FORCE" == "1" ] || [ "$FORCE" == "True" ] || [ "$FORCE" == "TRUE" ]; th
   FORCE="-f"
 fi
 
-# Add CNAME to dnsmasq configuration
-echo "address=/${CHARTMUSEUM_ALIAS}/${CHARTMUSEUM_URL}" > /etc/dnsmasq.d/0hosts
-
-# Start dnsmasq in background
-dnsmasq -d -q -k &
 
 # Store the original working directory
 orig_dir=$(pwd)
@@ -42,6 +37,11 @@ fi
 if [[ $CHARTMUSEUM_CERT ]]; then
   echo "CERT is set. Saving to $GITHUB_WORKSPACE/cert.crt"
   echo $CHARTMUSEUM_CERT | base64 -d > $GITHUB_WORKSPACE/cert.crt
+fi
+
+if [[ $CHARTMUSEUM_ALIAS && $CHARTMUSEUM_URL ]]; then
+  CHARTMUSEUM_IP=$(dig +short $CHARTMUSEUM_URL)
+  echo "$CHARTMUSEUM_IP $CHARTMUSEUM_ALIAS" >> /etc/hosts
 fi
 
 for CHART_PATH in $PATHS; do
