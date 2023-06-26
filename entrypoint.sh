@@ -19,13 +19,16 @@ elif [ "$FORCE" == "1" ] || [ "$FORCE" == "True" ] || [ "$FORCE" == "TRUE" ]; th
   FORCE="-f"
 fi
 
+# Add CNAME to dnsmasq configuration
+echo "address=/${CHARTMUSEUM_ALIAS}/${CHARTMUSEUM_URL}" > /etc/dnsmasq.d/0hosts
+
+# Restart dnsmasq service to apply the change
+service dnsmasq restart
+
 # Store the original working directory
 orig_dir=$(pwd)
 
-#create certificates directory
-mkdir -p $GITHUB_WORKSPACE
-
-# save ca.crt, cert.key, and cert.crt to $GITHUB_WORKSPACE
+# Save ca.crt, cert.key, and cert.crt to $GITHUB_WORKSPACE
 if [[ $CHARTMUSEUM_CA_CERT ]]; then
   echo "CA_CRT is set. Saving to $GITHUB_WORKSPACE/ca.crt"
   echo $CHARTMUSEUM_CA_CERT | base64 -d > $GITHUB_WORKSPACE/ca.crt
@@ -49,7 +52,7 @@ for CHART_PATH in $PATHS; do
   helm inspect chart .
 
   if [[ $CHARTMUSEUM_REPO_NAME ]]; then
-    helm repo add ${CHARTMUSEUM_REPO_NAME} ${CHARTMUSEUM_URL} --ca-file $GITHUB_WORKSPACE/ca.crt --cert-file $GITHUB_WORKSPACE/cert.crt --key-file $GITHUB_WORKSPACE/cert.key
+    helm repo add ${CHARTMUSEUM_REPO_NAME} ${CHARTMUSEUM_ALIAS} --ca-file $GITHUB_WORKSPACE/ca.crt --cert-file $GITHUB_WORKSPACE/cert.crt --key-file $GITHUB_WORKSPACE/cert.key
   fi
 
   helm dependency update .
@@ -58,9 +61,7 @@ for CHART_PATH in $PATHS; do
 
   CHART_FOLDER=$(basename "$CHART_PATH")
 
-  export HELM_REPO_ACCESS_TOKEN="${CHARTMUSEUM_JWT}"
-  
-  helm cm-push ${CHART_FOLDER}-* ${CHARTMUSEUM_URL} ${FORCE} --ca-file $GITHUB_WORKSPACE/ca.crt --cert-file $GITHUB_WORKSPACE/cert.crt --key-file $GITHUB_WORKSPACE/cert.key
+  helm cm-push ${CHART_FOLDER}-* ${CHARTMUSEUM_ALIAS} ${FORCE} --ca-file $GITHUB_WORKSPACE/ca.crt --cert-file $GITHUB_WORKSPACE/cert.crt --key-file $GITHUB_WORKSPACE/cert.key
 
   # Return to the original working directory at the end of each loop iteration
   cd $orig_dir
