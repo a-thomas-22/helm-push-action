@@ -26,9 +26,9 @@ orig_dir=$(pwd)
 mkdir -p $GITHUB_WORKSPACE
 
 # save ca.crt, cert.key, and cert.crt to $GITHUB_WORKSPACE
-if [[ $CHARTMUSEUM_CA_CRT ]]; then
+if [[ $CHARTMUSEUM_CA_CERT ]]; then
   echo "CA_CRT is set. Saving to $GITHUB_WORKSPACE/ca.crt"
-  echo $CHARTMUSEUM_CA_CRT | base64 -d > $GITHUB_WORKSPACE/ca.crt
+  echo $CHARTMUSEUM_CA_CERT | base64 -d > $GITHUB_WORKSPACE/ca.crt
 fi
 
 if [[ $CHARTMUSEUM_KEY ]]; then
