@@ -51,6 +51,13 @@ for CHART_PATH in $PATHS; do
 
   helm inspect chart .
 
+  #If DEV env var is set, get chart version from chart.yaml and append -dev
+  if [[ $DEV ]]; then
+    CHART_VERSION=$(grep "^version:" Chart.yaml | awk '{print $2}')
+    CHART_VERSION="${CHART_VERSION}-dev"
+    sed -i "s/^version:.*/version: ${CHART_VERSION}/g" Chart.yaml
+  fi
+
   if [[ $CHARTMUSEUM_REPO_NAME ]]; then
     helm repo add ${CHARTMUSEUM_REPO_NAME} https://${CHARTMUSEUM_ALIAS} --ca-file $GITHUB_WORKSPACE/ca.crt --cert-file $GITHUB_WORKSPACE/cert.crt --key-file $GITHUB_WORKSPACE/cert.key
   fi
