@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 set -e
-set -x
 
 if [ -z "$PATHS" ]; then
   echo "PATHS is not set. Quitting."
