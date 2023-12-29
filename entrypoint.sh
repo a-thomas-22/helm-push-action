@@ -29,9 +29,11 @@ orig_dir=$(pwd)
 CHARTMUSEUM_BASE_DOMAIN=$(echo $CHARTMUSEUM_URL | awk -F'/' '{print $1}')
 echo "CHARTMUSEUM_BASE_DOMAIN: $CHARTMUSEUM_BASE_DOMAIN"
 
-#extract path from CHARTMUSEUM_URL
+#extract path from CHARTMUSEUM_URL. If doesn't exist, set to empty string
 CHARTMUSEUM_PATH=$(echo $CHARTMUSEUM_URL | awk -F'/' '{print $2}')
-echo "CHARTMUSEUM_PATH: $CHARTMUSEUM_PATH"
+if [[ -z $CHARTMUSEUM_PATH ]]; then
+  CHARTMUSEUM_PATH=""
+fi
 
 # Save ca.crt, cert.key, and cert.crt to $GITHUB_WORKSPACE
 if [[ $CHARTMUSEUM_CA_CERT ]]; then
@@ -80,8 +82,13 @@ for CHART_PATH in $PATHS; do
 
   CHART_FOLDER=$(basename "$CHART_PATH")
 
+  # If There is a chartmuseum path, set HELM_REPO_CONTEXT_PATH
+  if [[ $CHARTMUSEUM_PATH ]]; then
+    HELM_REPO_CONTEXT_PATH="${CHARTMUSEUM_PATH}"
+  fi
+
   echo "Pushing ${CHART_FOLDER}-* to https://${CHARTMUSEUM_ALIAS}/${CHARTMUSEUM_PATH}"
-  helm cm-push ${CHART_FOLDER}-* https://${CHARTMUSEUM_ALIAS}/${CHARTMUSEUM_PATH} ${FORCE} --ca-file $GITHUB_WORKSPACE/ca.crt --cert-file $GITHUB_WORKSPACE/cert.crt --key-file $GITHUB_WORKSPACE/cert.key
+  helm cm-push ${CHART_FOLDER}-* ${CHARTMUSEUM_REPO_NAME} ${FORCE} --ca-file $GITHUB_WORKSPACE/ca.crt --cert-file $GITHUB_WORKSPACE/cert.crt --key-file $GITHUB_WORKSPACE/cert.key
 
   # Return to the original working directory at the end of each loop iteration
   cd $orig_dir
