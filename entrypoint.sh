@@ -82,13 +82,15 @@ for CHART_PATH in $PATHS; do
 
   CHART_FOLDER=$(basename "$CHART_PATH")
 
-  # If There is a chartmuseum path, set HELM_REPO_CONTEXT_PATH
+  # If There is a chartmuseum path, set --context-path flag env var
+  CONTEXT_PATH=""
   if [[ $CHARTMUSEUM_PATH ]]; then
-    HELM_REPO_CONTEXT_PATH="${CHARTMUSEUM_PATH}"
+    echo "CHARTMUSEUM_PATH is set. Setting --context-path to ${CHARTMUSEUM_PATH}"
+    CONTEXT_PATH="--context-path ${CHARTMUSEUM_PATH}"
   fi
 
-  echo "Pushing ${CHART_FOLDER}-* to https://${CHARTMUSEUM_ALIAS}/${CHARTMUSEUM_PATH}"
-  helm cm-push ${CHART_FOLDER}-* https://${CHARTMUSEUM_ALIAS}/${CHARTMUSEUM_PATH} ${FORCE} --ca-file $GITHUB_WORKSPACE/ca.crt --cert-file $GITHUB_WORKSPACE/cert.crt --key-file $GITHUB_WORKSPACE/cert.key
+  echo "Pushing ${CHART_FOLDER}-* to https://${CHARTMUSEUM_ALIAS}/${CHARTMUSEUM_PATH} ${FORCE} ${CONTEXT_PATH}"
+  helm cm-push ${CHART_FOLDER}-* https://${CHARTMUSEUM_ALIAS}/${CHARTMUSEUM_PATH} ${FORCE} ${CONTEXT_PATH} --ca-file $GITHUB_WORKSPACE/ca.crt --cert-file $GITHUB_WORKSPACE/cert.crt --key-file $GITHUB_WORKSPACE/cert.key
 
   # Return to the original working directory at the end of each loop iteration
   cd $orig_dir
