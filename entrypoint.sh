@@ -88,7 +88,7 @@ for CHART_PATH in $PATHS; do
   fi
 
   echo "Pushing ${CHART_FOLDER}-* to https://${CHARTMUSEUM_ALIAS}/${CHARTMUSEUM_PATH}"
-  helm cm-push ${CHART_FOLDER}-* https://${CHARTMUSEUM_ALIAS}/${CHARTMUSEUM_PATH}" ${FORCE} --ca-file $GITHUB_WORKSPACE/ca.crt --cert-file $GITHUB_WORKSPACE/cert.crt --key-file $GITHUB_WORKSPACE/cert.key
+  helm cm-push ${CHART_FOLDER}-* https://${CHARTMUSEUM_ALIAS}/${CHARTMUSEUM_PATH} ${FORCE} --ca-file $GITHUB_WORKSPACE/ca.crt --cert-file $GITHUB_WORKSPACE/cert.crt --key-file $GITHUB_WORKSPACE/cert.key
 
   # Return to the original working directory at the end of each loop iteration
   cd $orig_dir
