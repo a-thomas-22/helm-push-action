@@ -44,6 +44,7 @@ fi
 
 if [[ $CHARTMUSEUM_CERT ]]; then
   echo "CERT is set. Saving to $GITHUB_WORKSPACE/cert.crt"
+  cat $GITHUB_WORKSPACE/cert.crt
 fi
 
 if [[ $CHARTMUSEUM_ALIAS && $CHARTMUSEUM_BASE_DOMAIN ]]; then
