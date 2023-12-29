@@ -24,9 +24,11 @@ orig_dir=$(pwd)
 
 #extract base domain from CHARTMUSEUM_URL
 CHARTMUSEUM_BASE_DOMAIN=$(echo $CHARTMUSEUM_URL | awk -F'/' '{print $1}')
+echo "CHARTMUSEUM_BASE_DOMAIN: $CHARTMUSEUM_BASE_DOMAIN"
 
 #extract path from CHARTMUSEUM_URL
 CHARTMUSEUM_PATH=$(echo $CHARTMUSEUM_URL | awk -F'/' '{print $2}')
+echo "CHARTMUSEUM_PATH: $CHARTMUSEUM_PATH"
 
 # Save ca.crt, cert.key, and cert.crt to $GITHUB_WORKSPACE
 if [[ $CHARTMUSEUM_CA_CERT ]]; then
