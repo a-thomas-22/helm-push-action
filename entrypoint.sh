@@ -33,24 +33,27 @@ echo "CHARTMUSEUM_BASE_DOMAIN: $CHARTMUSEUM_BASE_DOMAIN"
 CHARTMUSEUM_PATH=$(echo $CHARTMUSEUM_URL | awk -F'/' '{print $2}')
 echo "CHARTMUSEUM_PATH: $CHARTMUSEUM_PATH"
 
+#create directory for certs
+mkdir -p $GITHUB_WORKSPACE/certs
+
 # Save ca.crt, cert.key, and cert.crt to $GITHUB_WORKSPACE
 if [[ $CHARTMUSEUM_CA_CERT ]]; then
-  echo "CA_CRT is set. Saving to $GITHUB_WORKSPACE/ca.crt"
+  echo "CA_CRT is set. Saving to $GITHUB_WORKSPACE/certs/ca.crt"
 fi
 
 if [[ $CHARTMUSEUM_KEY ]]; then
-  echo "KEY is set. Saving to $GITHUB_WORKSPACE/cert.key"
+  echo "KEY is set. Saving to $GITHUB_WORKSPACE/certs/cert.key"
 fi
 
 if [[ $CHARTMUSEUM_CERT ]]; then
-  echo "CERT is set. Saving to $GITHUB_WORKSPACE/cert.crt"
+  echo "CERT is set. Saving to $GITHUB_WORKSPACE/certs/cert.crt"
 fi
 
 #list all files in $GITHUB_WORKSPACE
-ls -la $GITHUB_WORKSPACE
+ls -la $GITHUB_WORKSPACE/certs
 
 list contents of all files in $GITHUB_WORKSPACE
-for file in $GITHUB_WORKSPACE/*; do
+for file in $GITHUB_WORKSPACE/certs/*; do
   echo "Contents of $file:"
   cat $file
 done
