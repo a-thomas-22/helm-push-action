@@ -36,20 +36,18 @@ echo "CHARTMUSEUM_PATH: $CHARTMUSEUM_PATH"
 # Save ca.crt, cert.key, and cert.crt to $GITHUB_WORKSPACE
 if [[ $CHARTMUSEUM_CA_CERT ]]; then
   echo "CA_CRT is set. Saving to $GITHUB_WORKSPACE/ca.crt"
-  echo $CHARTMUSEUM_CA_CERT | base64 -d > $GITHUB_WORKSPACE/ca.crt
 fi
 
 if [[ $CHARTMUSEUM_KEY ]]; then
   echo "KEY is set. Saving to $GITHUB_WORKSPACE/cert.key"
-  echo $CHARTMUSEUM_KEY | base64 -d > $GITHUB_WORKSPACE/cert.key
 fi
 
 if [[ $CHARTMUSEUM_CERT ]]; then
   echo "CERT is set. Saving to $GITHUB_WORKSPACE/cert.crt"
-  echo $CHARTMUSEUM_CERT | base64 -d > $GITHUB_WORKSPACE/cert.crt
 fi
 
 if [[ $CHARTMUSEUM_ALIAS && $CHARTMUSEUM_BASE_DOMAIN ]]; then
+  echo "CHARTMUSEUM_ALIAS is set. Adding $CHARTMUSEUM_ALIAS to /etc/hosts"
   CHARTMUSEUM_IP=$(dig +short $CHARTMUSEUM_BASE_DOMAIN)
   echo "$CHARTMUSEUM_IP $CHARTMUSEUM_ALIAS" >> /etc/hosts
 fi
