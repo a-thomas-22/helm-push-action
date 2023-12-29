@@ -49,15 +49,6 @@ if [[ $CHARTMUSEUM_CERT ]]; then
   echo $CHARTMUSEUM_CERT | base64 -d > $GITHUB_WORKSPACE/cert.crt
 fi
 
-#list all files in $GITHUB_WORKSPACE
-ls -la $GITHUB_WORKSPACE
-
-list contents of all files in $GITHUB_WORKSPACE
-for file in $GITHUB_WORKSPACE/*; do
-  echo "Contents of $file:"
-  cat $file
-done
-
 if [[ $CHARTMUSEUM_ALIAS && $CHARTMUSEUM_BASE_DOMAIN ]]; then
   echo "CHARTMUSEUM_ALIAS is set. Adding $CHARTMUSEUM_ALIAS to /etc/hosts"
   CHARTMUSEUM_IP=$(dig +short $CHARTMUSEUM_BASE_DOMAIN)
