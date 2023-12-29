@@ -86,7 +86,7 @@ for CHART_PATH in $PATHS; do
   CONTEXT_PATH=""
   if [[ $CHARTMUSEUM_PATH ]]; then
     echo "CHARTMUSEUM_PATH is set. Setting --context-path to ${CHARTMUSEUM_PATH}"
-    CONTEXT_PATH="--context-path ${CHARTMUSEUM_PATH}"
+    CONTEXT_PATH="--context-path /${CHARTMUSEUM_PATH}"
   fi
 
   echo "Pushing ${CHART_FOLDER}-* to https://${CHARTMUSEUM_ALIAS}/${CHARTMUSEUM_PATH} ${FORCE} ${CONTEXT_PATH}"
