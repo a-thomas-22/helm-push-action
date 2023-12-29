@@ -6,17 +6,20 @@ if [ -z "$PATHS" ]; then
   echo "PATHS is not set. Quitting."
   exit 1
 fi
+echo "PATHS: $PATHS"
 
 if [ -z "$CHARTMUSEUM_URL" ]; then
   echo "CHARTMUSEUM_URL is not set. Quitting."
   exit 1
 fi
+echo "CHARTMUSEUM_URL: $CHARTMUSEUM_URL"
 
 if [ -z "$FORCE" ]; then
   FORCE=""
 elif [ "$FORCE" == "1" ] || [ "$FORCE" == "True" ] || [ "$FORCE" == "TRUE" ]; then
   FORCE="-f"
 fi
+echo "FORCE: $FORCE"
 
 
 # Store the original working directory
