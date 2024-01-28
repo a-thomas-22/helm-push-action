@@ -64,11 +64,19 @@ for CHART_PATH in $PATHS; do
 
   helm inspect chart .
 
+  CHART_VERSION_ARG=""
+
+  #If VERSION env var is set, set chart version to VERSION
+  if [[ $VERSION ]]; then
+    echo "VERSION is set. Setting chart version to ${VERSION}"
+    CHART_VERSION_ARG="--version ${VERSION}"
+  fi
+
   #If DEV env var is set, get chart version from chart.yaml and append -dev
   if [[ $DEV ]]; then
     CHART_VERSION=$(grep "^version:" Chart.yaml | awk '{print $2}')
     CHART_VERSION="${CHART_VERSION}-dev"
-    sed -i "s/^version:.*/version: ${CHART_VERSION}/g" Chart.yaml
+    CHART_VERSION_ARG="--version ${CHART_VERSION}"
   fi
 
   if [[ $CHARTMUSEUM_REPO_NAME ]]; then
@@ -90,7 +98,7 @@ for CHART_PATH in $PATHS; do
   fi
 
   echo "Pushing ${CHART_FOLDER}-* to https://${CHARTMUSEUM_ALIAS}/${CHARTMUSEUM_PATH} ${FORCE} ${CONTEXT_PATH}"
-  helm cm-push ${CHART_FOLDER}-* https://${CHARTMUSEUM_ALIAS}/${CHARTMUSEUM_PATH} ${FORCE} ${CONTEXT_PATH} --ca-file $GITHUB_WORKSPACE/ca.crt --cert-file $GITHUB_WORKSPACE/cert.crt --key-file $GITHUB_WORKSPACE/cert.key
+  helm cm-push ${CHART_FOLDER}-* https://${CHARTMUSEUM_ALIAS}/${CHARTMUSEUM_PATH} ${FORCE} ${CONTEXT_PATH} --ca-file $GITHUB_WORKSPACE/ca.crt --cert-file $GITHUB_WORKSPACE/cert.crt --key-file $GITHUB_WORKSPACE/cert.key ${CHART_VERSION_ARG}
 
   # Return to the original working directory at the end of each loop iteration
   cd $orig_dir
